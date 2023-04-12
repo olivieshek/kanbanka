@@ -1,0 +1,15 @@
+{% extends 'kanbanka/base.html' %}
+
+{% block title %}
+Kanban Delete
+{% endblock %}
+
+{% block content %}
+<h1>Удаляем канбан</h1>
+<form method="post">
+    {% csrf_token %}
+    <p>Вы уверены, что хотите удалить канбан "{{ object }}"?</p>
+    {{ form.as_p }}
+    <input type="submit" value="Подтвердить">
+</form>
+{% endblock %}

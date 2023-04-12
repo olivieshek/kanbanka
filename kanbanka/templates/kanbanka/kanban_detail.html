@@ -1,0 +1,9 @@
+{% extends 'kanbanka/base.html' %}
+
+{% block title %}
+Kanban Detail {{ kanban.id }}
+{% endblock %}
+
+{% block content %}
+<h1>Вы смотрите Канбан {{ kanban.id }} "{{ kanban.name }}"</h1>
+{% endblock %}
