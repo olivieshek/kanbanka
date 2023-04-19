@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
+from django.utils import timezone
 
 
 class Kanban(models.Model):
@@ -7,7 +8,13 @@ class Kanban(models.Model):
         max_length=50,
         verbose_name='Название канбана',
     )
-    # TODO: owner, date
+    owner = models.ForeignKey(
+        User,
+        verbose_name="Автор",
+        related_name='kanbans',
+        null=True,
+        on_delete=models.SET_NULL,
+    )
 
     def __str__(self):
         return self.name
@@ -27,6 +34,14 @@ class Task(models.Model):
         verbose_name='Описание задачи',
         blank=True,
     )
+    # FIXME дефолт при миграции
+    kanban = models.ForeignKey(
+        Kanban,
+        verbose_name='Канбан',
+        related_name='task_kanban',
+        on_delete=models.CASCADE,
+        choices=User.kanbans
+    )
     STATUSES = (
         ('PLANNED', 'Planned'),
         ('ACTIVE', 'Active'),
@@ -39,33 +54,29 @@ class Task(models.Model):
     )
     owner = models.ForeignKey(
         User,
-        verbose_name='Автор',  # TODO нормальное название ему
+        verbose_name='Автор',
         on_delete=models.SET_NULL,
         null=True,
     )
-    assigned_date = models.DateField(blank=True)
-    assigned_time = models.TimeField(blank=True)
+    creation_date = models.DateField(auto_now_add=True,)
+    creation_time = models.TimeField(auto_now_add=True,)
+    assigned_date = models.DateField(blank=True, default=timezone.now,)
+    assigned_time = models.TimeField(blank=True, default=timezone.now,)
+    executor = models.ForeignKey(
+        User,
+        verbose_name="Исполнитель",
+        related_name='task_owner',
+        null=True,
+        on_delete=models.SET_NULL,
+    )
+    planned_date = models.DateField(blank=True, default=timezone.now,)
+    planned_time = models.TimeField(blank=True, default=timezone.now,)
+    completed_date = models.DateField(blank=True, default=timezone.now,)
+    completed_time = models.TimeField(blank=True, default=timezone.now,)
 
-#
-#
-# class ActiveTask(models.Model):
-#     """
-#     owner - user (creator), default
-#     actionee - user, designed by owner
-#     start date
-#     deadline
-#     """
-#     author = models.ForeignKey(
-#         User,
-#         verbose_name='Автор',  # TODO нормальное название ему
-#         related_name='created_activetasks',
-#         on_delete=models.SET_DEFAULT,
-#         default='non-existent user'
-#     )
-#
-#
-# """
-# user | done [2]
-# task
-# desk
-# """
+    def __str__(self):
+        return self.name
+
+    class Meta:
+        verbose_name = "Задача"
+        verbose_name_plural = "Задачи"
