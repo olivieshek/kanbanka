@@ -2,6 +2,7 @@ from .models import Kanban
 from django.conf import settings
 from django.shortcuts import render
 from django.views import generic as g  # встроенные views
+from django.contrib.auth import views as authviews
 from django.urls import reverse_lazy
 
 
@@ -31,4 +32,15 @@ class KanbanDetailView(g.DetailView):
 class KanbanDeleteView(g.DeleteView):
     model = Kanban
     template_name = "kanbanka/kanban_delete.html"
-    success_url = reverse_lazy("index")
+    next_page = reverse_lazy("index")
+
+
+class UserLoginView(authviews.LoginView):
+    fields = "__all__"
+    template_name = "authentication/login.html"
+
+
+class UserLogoutView(authviews.LogoutView):
+    fields = "__all__"
+    template_name = "kanbanka/logout.html"
+    next_page = reverse_lazy('index')

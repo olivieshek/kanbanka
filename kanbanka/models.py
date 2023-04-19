@@ -7,7 +7,7 @@ class Kanban(models.Model):
         max_length=50,
         verbose_name='Название канбана',
     )
-    # TODO: author, date
+    # TODO: owner, date
 
     def __str__(self):
         return self.name
@@ -34,37 +34,38 @@ class Task(models.Model):
         ('OVERDUE', 'Overdue'),
     )
     status = models.CharField(
-        choices=STATUSES
+        max_length=100,
+        choices=STATUSES,
     )
-    author = models.ForeignKey(
+    owner = models.ForeignKey(
         User,
         verbose_name='Автор',  # TODO нормальное название ему
-        related_name='created_tasks',
-        on_delete=models.SET_DEFAULT,
-        default='non-existent user'
+        on_delete=models.SET_NULL,
+        null=True,
     )
     assigned_date = models.DateField(blank=True)
     assigned_time = models.TimeField(blank=True)
 
-
-class ActiveTask(models.Model):
-    """
-    author - user (creator), default
-    actionee - user, designed by author
-    start date
-    deadline
-    """
-    author = models.ForeignKey(
-        User,
-        verbose_name='Автор',  # TODO нормальное название ему
-        related_name='created_activetasks',
-        on_delete=models.SET_DEFAULT,
-        default='non-existent user'
-    )
-
-
-"""
-user | done [2]
-task
-desk
-"""
+#
+#
+# class ActiveTask(models.Model):
+#     """
+#     owner - user (creator), default
+#     actionee - user, designed by owner
+#     start date
+#     deadline
+#     """
+#     author = models.ForeignKey(
+#         User,
+#         verbose_name='Автор',  # TODO нормальное название ему
+#         related_name='created_activetasks',
+#         on_delete=models.SET_DEFAULT,
+#         default='non-existent user'
+#     )
+#
+#
+# """
+# user | done [2]
+# task
+# desk
+# """
