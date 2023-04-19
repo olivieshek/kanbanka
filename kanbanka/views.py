@@ -1,9 +1,10 @@
-from .models import Kanban
+from .models import Kanban, Task
 from django.conf import settings
 from django.shortcuts import render
 from django.views import generic as g  # встроенные views
 from django.contrib.auth import views as authviews
 from django.urls import reverse_lazy
+from django.http import HttpResponseRedirect
 
 
 class KanbanCreateView(g.CreateView):
@@ -41,6 +42,14 @@ class UserLoginView(authviews.LoginView):
 
 
 class UserLogoutView(authviews.LogoutView):
-    fields = "__all__"
-    template_name = "kanbanka/logout.html"
     next_page = reverse_lazy('index')
+
+# TODO User SignUp
+
+
+class TaskCreateView(g.CreateView):
+    # TODO Создавать может только хозяин доски?
+    model = Task
+    template_name = 'kanbanka/task_create.html'
+    fields = '__all__'
+    success_url = reverse_lazy('index')

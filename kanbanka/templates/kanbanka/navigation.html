@@ -1,6 +1,8 @@
-<a href="{% url 'admin:index' %}">Перейти в админку...</a><br>
-<a href="{% url 'kanban_create' %}">Создать новый канбан</a><br>
 {% if user.is_authenticated %}
+    {% if user.is_staff %}
+        <a href="{% url 'admin:index' %}">Перейти в админку...</a><br>
+    {% endif %}
+    <a href="{% url 'kanban_create' %}">Создать новый канбан</a><br>
     {{ user.username }} --
     <a href="{% url 'logout' %}">Выйти из аккаунта</a>
 {% else %}
