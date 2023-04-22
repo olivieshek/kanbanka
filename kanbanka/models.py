@@ -51,6 +51,7 @@ class Task(models.Model):
     status = models.CharField(
         max_length=100,
         choices=STATUSES,
+        verbose_name='Статус',
     )
     owner = models.ForeignKey(
         User,

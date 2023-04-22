@@ -45,8 +45,8 @@ class KanbanDetailView(g.DetailView):
 
 class KanbanDeleteView(g.DeleteView):
     model = Kanban
+    success_url = reverse_lazy("index")
     template_name = "kanbanka/kanban_delete.html"
-    next_page = reverse_lazy("index")
 
 
 class UserLoginView(authviews.LoginView):
@@ -64,5 +64,24 @@ class TaskCreateView(g.CreateView):
     # TODO Создавать может только хозяин доски?
     model = Task
     template_name = 'kanbanka/task_create.html'
-    fields = '__all__'
-    success_url = reverse_lazy('index')
+    fields = ['name', 'description']
+
+    def get_success_url(self):
+        kanban_pk = self.object.kanban.pk
+        return reverse_lazy(
+            'kanban_detail',
+            kwargs={'pk': kanban_pk}
+        )
+
+
+class TaskDeleteView(g.DeleteView):
+    model = Task
+    template_name = "kanbanka/task_delete.html"
+    next_page = reverse_lazy("index")
+
+    def get_success_url(self):
+        kanban_pk = self.object.kanban.pk
+        return reverse_lazy(
+            'kanban_detail',
+            kwargs={'pk': kanban_pk}
+        )

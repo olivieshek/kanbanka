@@ -8,7 +8,7 @@ Kanban Delete
     <form action="" method="POST">
         {% csrf_token %}
         {{ form.as_p }}
-        <p>Вы уверены, что хотите удалить канбан "{{ kanban.name }}"?</p>
+        <p>Вы уверены, что хотите удалить таску "{{ task.name }}"?</p>
         <input type="submit" value="Удалить">
     </form>
 {% endblock %}
