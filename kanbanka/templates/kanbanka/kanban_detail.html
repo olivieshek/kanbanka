@@ -7,4 +7,19 @@ Kanban Detail {{ kanban.id }}
 {% block content %}
 <h1>Вы смотрите Канбан {{ kanban.id }} "{{ kanban.name }}"</h1>
 <p>Создатель - {{ kanban.created_tasks }}</p>
+<p>
+    Задачи:
+    <ol>
+        {% for task in kanban.kanban_tasks.all %}
+            <li>
+                <a href="">{{ task }}</a>  <!-- TODO ссылка на таску (TaskDetail), ссылка на удаление таски -->
+            </li>
+        {% empty %}
+            <li>
+                <p>Задач пока нет. Добавить новую?</p>
+                <a href="">Добавить...</a>  <!-- TODO Добавить ссылку на добавление -->
+            </li>
+        {% endfor %}
+    </ol>
+</p>
 {% endblock %}

@@ -6,6 +6,14 @@ from django.contrib.auth import views as authviews
 from django.urls import reverse_lazy
 from django.http import HttpResponseRedirect
 
+"""
+-- Available Views:
+1. Kanban Create
+2. 
+"""
+
+# TODO "Update" Kanban
+
 
 class KanbanCreateView(g.CreateView):
     model = Kanban
@@ -19,15 +27,20 @@ class KanbanListView(g.ListView):
     template_name = "kanbanka/index.html"
     context_object_name = "kanbans"  # default - object_list
 
-    def get_context_data(self, *, object_list=None, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['MEDIA_URL'] = settings.MEDIA_URL
-        return context
+    # def get_context_data(self, *, object_list=None, **kwargs):
+    #     context = super().get_context_data(**kwargs)
+    #     context['MEDIA_URL'] = settings.MEDIA_URL
+    #     return context
 
 
 class KanbanDetailView(g.DetailView):
     model = Kanban
     template_name = "kanbanka/kanban_detail.html"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["tasks"] = self.object.kanban_tasks
+        return context
 
 
 class KanbanDeleteView(g.DeleteView):

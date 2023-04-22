@@ -34,13 +34,13 @@ class Task(models.Model):
         verbose_name='Описание задачи',
         blank=True,
     )
-    # FIXME дефолт при миграции
     kanban = models.ForeignKey(
         Kanban,
         verbose_name='Канбан',
-        related_name='task_kanban',
+        related_name='kanban_tasks',
         on_delete=models.CASCADE,
-        choices=User.kanbans
+        blank=True,
+        default='',
     )
     STATUSES = (
         ('PLANNED', 'Planned'),
@@ -69,8 +69,8 @@ class Task(models.Model):
         null=True,
         on_delete=models.SET_NULL,
     )
-    planned_date = models.DateField(blank=True, default=timezone.now,)
-    planned_time = models.TimeField(blank=True, default=timezone.now,)
+    deadline_date = models.DateField(blank=True, default=timezone.now,)
+    deadline_time = models.TimeField(blank=True, default=timezone.now,)
     completed_date = models.DateField(blank=True, default=timezone.now,)
     completed_time = models.TimeField(blank=True, default=timezone.now,)
 
