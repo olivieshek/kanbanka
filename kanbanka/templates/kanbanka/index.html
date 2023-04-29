@@ -9,7 +9,7 @@ Kanban List
     <ol>
     {% for kanban in kanbans %}
     <li>
-        <a href="{% url 'kanban_detail' kanban.id %}">{{ kanban.name }}</a> <a href="{% url 'kanban_delete' kanban.id %}">Удалить</a>
+        <a href="{% url 'kanbanka:kanban_detail' kanban.id %}">{{ kanban.name }}</a> <a href="{% url 'kanbanka:kanban_delete' kanban.id %}">Удалить</a>
     </li>
     {% endfor %}
     </ol>

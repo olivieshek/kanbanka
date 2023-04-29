@@ -3,7 +3,7 @@ from django.conf import settings
 from django.shortcuts import render
 from django.views import generic as g  # встроенные views
 from django.contrib.auth import views as authviews
-from django.urls import reverse_lazy
+from django.urls import reverse_lazy, reverse
 from django.http import HttpResponseRedirect
 
 """
@@ -36,10 +36,15 @@ class KanbanListView(g.ListView):
 class KanbanDetailView(g.DetailView):
     model = Kanban
     template_name = "kanbanka/kanban_detail.html"
+    context_object_name = "kanban"
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context["tasks"] = self.object.kanban_tasks
+        context["tasks_planned"] = Task.objects.filter(status='PLANNED')
+        context["tasks_active"] = Task.objects.filter(status='ACTIVE')
+        context["tasks_completed"] = Task.objects.filter(status='COMPLETED')
+        context["tasks_overdue"] = Task.objects.filter(status='OVERDUE')
         return context
 
 
@@ -66,10 +71,14 @@ class TaskCreateView(g.CreateView):
     template_name = 'kanbanka/task_create.html'
     fields = ['name', 'description']
 
+    def form_valid(self, form):
+        form.instance.kanban = Kanban.objects.get(id=self.kwargs['pk'])
+        return super().form_valid(form)
+
     def get_success_url(self):
-        kanban_pk = self.object.kanban.pk
-        return reverse_lazy(
-            'kanban_detail',
+        kanban_pk = self.object.kanban.id
+        return reverse(
+            'kanbanka:kanban_detail',
             kwargs={'pk': kanban_pk}
         )
 
@@ -82,6 +91,6 @@ class TaskDeleteView(g.DeleteView):
     def get_success_url(self):
         kanban_pk = self.object.kanban.pk
         return reverse_lazy(
-            'kanban_detail',
+            'kanbanka:kanban_detail',
             kwargs={'pk': kanban_pk}
         )

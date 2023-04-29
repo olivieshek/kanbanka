@@ -1,10 +1,11 @@
+<a href="{% url 'kanbanka:index' %}">На главную...</a><br>
 {% if user.is_authenticated %}
     {% if user.is_staff %}
         <a href="{% url 'admin:index' %}">Перейти в админку...</a><br>
     {% endif %}
-    <a href="{% url 'kanban_create' %}">Создать новый канбан</a><br>
+    <a href="{% url 'kanbanka:kanban_create' %}">Создать новый канбан</a><br>
     {{ user.username }} --
-    <a href="{% url 'logout' %}">Выйти из аккаунта</a>
+    <a href="{% url 'kanbanka:logout' %}">Выйти из аккаунта</a>
 {% else %}
-    <a href="{% url 'login' %}">Войти в аккаунт...</a>
+    <a href="{% url 'kanbanka:login' %}">Войти в аккаунт...</a>
 {% endif %}
