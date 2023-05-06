@@ -7,10 +7,29 @@
           content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>{% block title %}{% endblock %}</title>
-    <link rel="stylesheet" href="{% static 'kanbanka/style.css' %}">
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
 </head>
 <body>
-    {% include 'kanbanka/navigation.html' %}
-    {% block content %}{% endblock %}
+    <div class="page-container">
+        <header>
+            <nav>
+                <a href="{% url 'kanbanka:index' %}">На главную...</a><br>
+                {% if user.is_authenticated and user.is_staff %}
+                    <a href="{% url 'admin:index' %}">Перейти в админку...</a><br>
+                {% endif %}
+            </nav>
+            <div class="user_actions">
+                {% if user.is_authenticated %}
+                    <a href="{% url 'kanbanka:kanban_create' %}">Создать новый канбан</a><br>
+                    <p>Вы вошли в аккаунт: {{ user.username }}</p>
+                    <a href="{% url 'kanbanka:logout' %}">Выйти из аккаунта</a>
+                {% else %}
+                    <a href="{% url 'kanbanka:login' %}">Войти в аккаунт...</a>
+                {% endif %}
+            </div>
+        </header>
+        <main>{% block content %}{% endblock %}</main>
+        <footer></footer>
+    </div>
 </body>
 </html>

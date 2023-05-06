@@ -17,7 +17,10 @@ Kanban Detail {{ kanban.id }}
                      : <br> "{{ task.description }}" <br>
                 {% endif %}
                 <!-- TODO доп инфа -->
-                <a href="{% url 'kanbanka:task_delete' task.id %}">Удалить</a>
+                {% if user == kanban.owner %}
+                    <a href="{% url 'kanbanka:task_delete' task.id %}">Удалить</a><br>
+                    <a href="{% url 'kanbanka:task_activate' task.id %}">Активировать задачу</a>
+                {% endif %}
             </li>
         {% empty %}
             <li>
@@ -37,7 +40,10 @@ Kanban Detail {{ kanban.id }}
                      : <br> "{{ task.description }}" <br>
                 {% endif %}
                 <!-- TODO доп инфа -->
-                <a href="{% url 'kanbanka:task_delete' task.id %}">Удалить</a>
+                {% if user == kanban.owner %}
+                    <a href="{% url 'kanbanka:task_delete' task.id %}">Удалить</a>
+                    <a href="{% url 'kanbanka:task_complete' task.id %}">Завершить задачу</a>
+                {% endif %}
             </li>
         {% empty %}
             <li>
@@ -57,7 +63,9 @@ Kanban Detail {{ kanban.id }}
                      : <br> "{{ task.description }}" <br>
                 {% endif %}
                 <!-- TODO доп инфа -->
-                <a href="{% url 'kanbanka:task_delete' task.id %}">Удалить</a>
+                {% if user == kanban.owner %}
+                    <a href="{% url 'kanbanka:task_delete' task.id %}">Удалить</a>
+                {% endif %}
             </li>
         {% empty %}
             <li>
@@ -77,7 +85,9 @@ Kanban Detail {{ kanban.id }}
                      : <br> "{{ task.description }}" <br>
                 {% endif %}
                 <!-- TODO доп инфа -->
-                <a href="{% url 'kanbanka:task_delete' task.id %}">Удалить</a>
+                {% if user == kanban.owner %}
+                    <a href="{% url 'kanbanka:task_delete' task.id %}">Удалить</a>
+                {% endif %}
             </li>
         {% empty %}
             <li>

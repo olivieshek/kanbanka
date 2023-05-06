@@ -8,6 +8,8 @@ from .views import (
     UserLogoutView,
     TaskCreateView,
     TaskDeleteView,
+    TaskActivateView,
+    TaskCompleteView,
     # UserSignupView,
 )
 
@@ -23,6 +25,8 @@ urlpatterns = [
     path('kanban/task_create/<int:pk>', TaskCreateView.as_view(), name='task_create'),
     # path('kanban/<int:pk>/task_create/', TaskCreateView.as_view(), name='task_create'),
     path("kanban/task_delete/<int:pk>", TaskDeleteView.as_view(), name="task_delete"),
+    path("kanban/task_activate/<int:pk>", TaskActivateView.as_view(), name="task_activate"),
+    path("kanban/task_complete/<int:pk>", TaskCompleteView.as_view(), name="task_complete"),
     # path("accounts/signup/", UserSignup, name="signup"),
 ]
 

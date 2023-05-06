@@ -1,0 +1,14 @@
+{% extends 'kanbanka/base.html' %}
+
+{% block title %}
+Task Completion Form
+{% endblock %}
+
+{% block content %}
+<form action="" method="POST">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <input type="checkbox" value="set_now_dt" checked>Установить данное время?
+    <input type="submit" value="Завершить">
+</form>
+{% endblock %}
