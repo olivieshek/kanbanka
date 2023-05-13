@@ -93,11 +93,11 @@ class TaskCreateView(g.CreateView):
 
     def form_valid(self, form):
         form.instance.kanban = Kanban.objects.get(id=self.kwargs['pk'])
+        self.object.summary = self.object.description[:50]
         return super().form_valid(form)
 
     def get_success_url(self):
         kanban_pk = self.object.kanban.id
-        self.object.summary = self.object.description[:50]
         return reverse(
             'kanbanka:kanban_detail',
             kwargs={

@@ -58,7 +58,6 @@ class Task(models.Model):
         on_delete=models.SET_NULL,
         null=True,
     )
-    summary = str()
     creation_date = models.DateField(
         auto_now_add=True,
     )
