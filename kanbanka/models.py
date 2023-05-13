@@ -39,7 +39,6 @@ class Task(models.Model):
         verbose_name='Канбан',
         related_name='kanban_tasks',
         on_delete=models.CASCADE,
-        blank=True,
         default='',
     )
     STATUSES = (
@@ -59,10 +58,19 @@ class Task(models.Model):
         on_delete=models.SET_NULL,
         null=True,
     )
-    creation_date = models.DateField(auto_now_add=True,)
-    creation_time = models.TimeField(auto_now_add=True,)
-    assigned_date = models.DateField(blank=True, default=timezone.now,)
-    assigned_time = models.TimeField(blank=True, default=timezone.now,)
+    summary = str()
+    creation_date = models.DateField(
+        auto_now_add=True,
+    )
+    creation_time = models.TimeField(
+        auto_now_add=True,
+    )
+    assigned_date = models.DateField(
+        blank=True, default=timezone.now,
+    )
+    assigned_time = models.TimeField(
+        blank=True, default=timezone.now,
+    )
     executor = models.ForeignKey(
         User,
         verbose_name="Исполнитель",
@@ -70,10 +78,22 @@ class Task(models.Model):
         null=True,
         on_delete=models.SET_NULL,
     )
-    deadline_date = models.DateField(blank=True, default=timezone.now,)
-    deadline_time = models.TimeField(blank=True, default=timezone.now,)
-    completed_date = models.DateField(blank=True, default=timezone.now,)
-    completed_time = models.TimeField(blank=True, default=timezone.now,)
+    deadline_date = models.DateField(
+        blank=True,
+        default=timezone.now,
+    )
+    deadline_time = models.TimeField(
+        blank=True,
+        default=timezone.now,
+    )
+    completed_date = models.DateField(
+        blank=True,
+        default=timezone.now,
+    )
+    completed_time = models.TimeField(
+        blank=True,
+        default=timezone.now,
+    )
 
     def __str__(self):
         return self.name

@@ -87,7 +87,6 @@ class UserLogoutView(authviews.LogoutView):
 
 
 class TaskCreateView(g.CreateView):
-    # TODO Создавать может только хозяин доски?
     model = Task
     template_name = 'kanbanka/task_create.html'
     fields = ['name', 'description']
@@ -98,9 +97,12 @@ class TaskCreateView(g.CreateView):
 
     def get_success_url(self):
         kanban_pk = self.object.kanban.id
+        self.object.summary = self.object.description[:50]
         return reverse(
             'kanbanka:kanban_detail',
-            kwargs={'pk': kanban_pk}
+            kwargs={
+                'pk': kanban_pk,
+            }
         )
 
 

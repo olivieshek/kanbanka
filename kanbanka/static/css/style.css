@@ -1,0 +1,41 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    color: rgb(30, 30, 30);
+}
+
+.tasks-container {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    gap: 20px;
+    padding: 0 20px;
+}
+
+.tasks-item {
+    border: 2px solid;
+    flex-basis: 0px;
+    flex-grow: 1;
+    border-color: rgb(10, 10, 10);
+}
+
+.task-planned {
+    background-color: hsl(112deg, 58%, 69%);
+}
+
+.task-active {
+    background-color: hsl(59deg, 79%, 61%);
+}
+
+.task-completed {
+    background-color: hsl(226deg, 40%, 62%);
+}
+
+.task-overdue {
+    background-color: hsl(0deg, 58%, 64%);
+}
+
+.tasks-list {
+    list-style-position: inside;
+}
