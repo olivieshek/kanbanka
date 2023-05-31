@@ -118,5 +118,7 @@ Kanban Detail {{ kanban.id }}
         </ol>
     </div>
 </div>
-<a href="{% url 'kanbanka:task_create' kanban.id %}">Добавить задачу</a><br>
+{% if user.is_authenticated and kanban.owner == user %}
+    <a href="{% url 'kanbanka:task_create' kanban.id %}">Добавить задачу</a><br>
+{% endif %}
 {% endblock %}

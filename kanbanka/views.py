@@ -2,16 +2,28 @@ from .models import Kanban, Task
 from django.conf import settings
 from django.shortcuts import render
 from django.views import generic as g  # встроенные views
+from django.contrib import messages
 from django.contrib.auth import views as authviews
+from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.urls import reverse_lazy, reverse
 from django.utils import timezone
+from django.db.models import Q
 from django.http import HttpResponseRedirect
 
 """
 -- Available Views:
 1. Kanban Create
-2. 
+2. Kanban Detail (== Task List)
+3. Kanban Update
+4. Kanban Delete
+5. Task Create
+6. Task Detail
+7. Task Update
+8. Task Delete
+9. User Sign Up
+10. User Login
+11. User Logout
 """
 
 # TODO "Update" Kanban
@@ -41,10 +53,13 @@ class KanbanListView(g.ListView):
     template_name = "kanbanka/index.html"
     context_object_name = "kanbans"  # default - object_list
 
-    # def get_context_data(self, *, object_list=None, **kwargs):
-    #     context = super().get_context_data(**kwargs)
-    #     context['MEDIA_URL'] = settings.MEDIA_URL
-    #     return context
+    def get_queryset(self):
+        user = self.request.user
+        if user == 'AnonymousUser':
+            return Kanban.objects.none()
+
+        kanbans = Kanban.objects.filter(Q(owner=user) | Q(task__executor=user)).distinct()
+        return kanbans
 
 
 class KanbanDetailView(g.DetailView):
@@ -83,7 +98,16 @@ class UserLoginView(authviews.LoginView):
 class UserLogoutView(authviews.LogoutView):
     next_page = reverse_lazy('kanbanka:index')
 
-# TODO User SignUp
+
+def sign_up(request):
+    if request.method == 'POST':
+        form = UserCreationForm(request.POST)
+        if form.is_valid():
+            form.save()
+            username = form.cleaned_data.get('username')
+            messages.success(request, f'Привет, {username}! Ваш аккаунт создан! ;)')
+            return reverse('kanbanka:index')
+
 
 
 class TaskCreateView(g.CreateView):
@@ -93,7 +117,6 @@ class TaskCreateView(g.CreateView):
 
     def form_valid(self, form):
         form.instance.kanban = Kanban.objects.get(id=self.kwargs['pk'])
-        self.object.summary = self.object.description[:50]
         return super().form_valid(form)
 
     def get_success_url(self):
@@ -137,6 +160,15 @@ class TaskActivateView(g.UpdateView, LoginRequiredMixin, UserPassesTestMixin):
 
     def form_valid(self, form):
         if self.object.status == "PLANNED":
+            if not form.cleaned_data["executor"]:
+                form.add_error("executor", "Назначьте исполнителя!")
+                return super().form_invalid(form)
+            if not form.cleaned_data["deadline_date"]:
+                form.add_error("deadline_date", "Назначьте дату дедлайна!")
+                return super().form_invalid(form)
+            if not form.cleaned_data["deadline_time"]:
+                form.add_error("deadline_time", "Назначьте время дедлайна!")
+                return super().form_invalid(form)
             self.object.status = "ACTIVE"
             self.object.assigned_date = timezone.now().date()
             self.object.assigned_time = timezone.now().time()
