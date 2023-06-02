@@ -24,7 +24,8 @@
                     <p>Вы вошли в аккаунт: {{ user.username }}</p>
                     <a href="{% url 'kanbanka:logout' %}">Выйти из аккаунта</a>
                 {% else %}
-                    <a href="{% url 'kanbanka:login' %}">Войти в аккаунт...</a>
+                <p><a href="{% url 'kanbanka:login' %}">Войти в аккаунт...</a></p>
+                    <p></p><a href="{% url 'kanbanka:signup' %}">Зарегистрировать новый аккаунт</a></p>
                 {% endif %}
             </div>
         </header>

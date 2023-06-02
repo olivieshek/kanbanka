@@ -4,6 +4,8 @@ from django.shortcuts import render
 from django.views import generic as g  # встроенные views
 from django.contrib import messages
 from django.contrib.auth import views as authviews
+from django.contrib.auth import authenticate, login
+from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.urls import reverse_lazy, reverse
@@ -13,20 +15,24 @@ from django.http import HttpResponseRedirect
 
 """
 -- Available Views:
-1. Kanban Create
-2. Kanban Detail (== Task List)
-3. Kanban Update
-4. Kanban Delete
-5. Task Create
-6. Task Detail
-7. Task Update
-8. Task Delete
-9. User Sign Up
-10. User Login
-11. User Logout
+. Kanban Create
+. Kanban Detail (== Task List)
+. Kanban Update
+. Kanban Delete
+. Task Create
+. Task Update
+. Task Delete
+. User Sign Up
+. User Login
+. User Logout
 """
 
-# TODO "Update" Kanban
+# TODO - Task Detail View
+# TODO - Kanban Update
+# TODO - профиль аккаунта
+# TODO - подтверждение аккаунта почтой
+# TODO - восстановление / изменение пароля
+
 
 class TimezoneMiddleware:
     def __init__(self, get_response):
@@ -55,10 +61,10 @@ class KanbanListView(g.ListView):
 
     def get_queryset(self):
         user = self.request.user
-        if user == 'AnonymousUser':
+        if not user.is_authenticated:
             return Kanban.objects.none()
 
-        kanbans = Kanban.objects.filter(Q(owner=user) | Q(task__executor=user)).distinct()
+        kanbans = Kanban.objects.filter(Q(owner=user) | Q(kanban_tasks__executor=user)).distinct()
         return kanbans
 
 
@@ -99,15 +105,28 @@ class UserLogoutView(authviews.LogoutView):
     next_page = reverse_lazy('kanbanka:index')
 
 
-def sign_up(request):
-    if request.method == 'POST':
+def user_signup(request):
+    if request.method == "POST":
         form = UserCreationForm(request.POST)
         if form.is_valid():
+            username = request.POST['username']
+            password = request.POST['password1']
             form.save()
-            username = form.cleaned_data.get('username')
-            messages.success(request, f'Привет, {username}! Ваш аккаунт создан! ;)')
-            return reverse('kanbanka:index')
+            user = authenticate(
+                username=username,
+                password=password
+            )
+            if user is not None:
+                # Создавать пользователя только с подтвержденной учеткой (if user.is_active)
+                login(request, user)
+            else:
+                messages.error(request, 'Invalid Log in.')
+                return reverse_lazy('index')
+            return HttpResponseRedirect("/kanbanka/")
+    else:
+        form = UserCreationForm()
 
+    return render(request, "authentication/signup.html", {"form": form})
 
 
 class TaskCreateView(g.CreateView):
