@@ -32,6 +32,9 @@ from django.http import HttpResponseRedirect
 # TODO - профиль аккаунта
 # TODO - подтверждение аккаунта почтой
 # TODO - восстановление / изменение пароля
+# TODO - просрочка для Task
+# TODO - инвайт-система
+# TODO - css (относительно нормальный дизайн)
 
 
 class TimezoneMiddleware:
@@ -199,7 +202,6 @@ class TaskCompleteView(g.UpdateView, LoginRequiredMixin, UserPassesTestMixin):
     model = Task
     fields = []
     current_timezone = timezone.now()
-    # TODO ставить завершение задним числом
     template_name = "kanbanka/task_complete.html"
 
     def get_success_url(self):
