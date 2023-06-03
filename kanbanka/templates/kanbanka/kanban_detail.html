@@ -30,7 +30,7 @@ Kanban Detail {{ kanban.id }}
             {% empty %}
                 <li>
                     <p>Задач пока нет. Добавить новую?</p>
-                    <a href="{% url 'kanbanka:task_create' %}">Добавить...</a>
+                    <a href="{% url 'kanbanka:task_create' kanban.id%}">Добавить...</a>
                 </li>
             {% endfor %}
         </ol>
@@ -58,7 +58,7 @@ Kanban Detail {{ kanban.id }}
             {% empty %}
                 <li>
                     <p>Задач пока нет. Добавить новую?</p>
-                    <a href="{% url 'kanbanka:task_create' %}">Добавить...</a>
+                    <a href="{% url 'kanbanka:task_create' kanban.id %}">Добавить...</a>
                 </li>
             {% endfor %}
         </ol>
@@ -85,7 +85,7 @@ Kanban Detail {{ kanban.id }}
             {% empty %}
                 <li>
                     <p>Задач пока нет. Добавить новую?</p>
-                    <a href="{% url 'kanbanka:task_create' %}">Добавить...</a>
+                    <a href="{% url 'kanbanka:task_create' kanban.id %}">Добавить...</a>
                 </li>
             {% endfor %}
         </ol>
@@ -119,6 +119,7 @@ Kanban Detail {{ kanban.id }}
     </div>
 </div>
 {% if user.is_authenticated and kanban.owner == user %}
+    <div class="test"></div>
     <a href="{% url 'kanbanka:task_create' kanban.id %}">Добавить задачу</a><br>
 {% endif %}
 {% endblock %}

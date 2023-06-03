@@ -2,7 +2,8 @@
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    color: rgb(30, 30, 30);
+    color: rgb(0, 0, 0);
+    font-family: 'Geologica', sans-serif;
 }
 
 .kanban-info {
@@ -30,7 +31,9 @@
 
 .tasks-item {
     border: 2px solid;
-    border-color: rgb(10, 10, 10);
+    border-radius: 10px;
+    border-color: rgb(0, 0, 0);
+    padding: 5px;
 }
 
 .tasks-item p, h4 {
@@ -62,6 +65,21 @@
     margin-bottom: 20px;
 }
 
+.task-delete-button {
+    background: #FF563D;
+}
+
+.task-change-status-button {
+    background: #EDFFCD;
+}
+
+.user_actions {
+    text-align: center;
+    position: absolute;
+    right: 0;
+    top: 0;
+}
+
 .control-buttons a {
     outline: none;
     text-decoration: none;
@@ -70,10 +88,10 @@
     color: black;
 }
 
-.task-delete-button {
-    background: #FF563D;
+.test {
+    padding-bottom: 10px;
 }
 
-.task-change-status-button {
-    background: #EDFFCD;
+.show_more a{
+    text-decoration: none;
 }

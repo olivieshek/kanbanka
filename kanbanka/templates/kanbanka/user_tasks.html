@@ -1,0 +1,29 @@
+{% extends 'kanbanka/base.html' %}
+
+{% block title %}
+Tasks List
+{% endblock %}
+
+{% block content %}
+{% if tasks %}
+    <ol>
+    {% for task in tasks %}
+    <li>
+        <h4>{{ task.name }}</h4>
+        {% if task.description %}
+             <p class="task-description">"{{ task.description|truncatechars:50 }}"</p>
+        {% endif %}
+        <p class="show_more">
+<!--            TODO подробнее задача-->
+            <a href="">Подробнее...</a>
+        </p>
+        <div class="control-buttons">
+            <p><a href="{% url 'kanbanka:kanban_detail' task.kanban.id %}">Перейти к доске...</a></p>
+        </div>
+    </li>
+    {% endfor %}
+    </ol>
+{% else %}
+<p>Нет задач.</p>
+{% endif %}
+{% endblock %}

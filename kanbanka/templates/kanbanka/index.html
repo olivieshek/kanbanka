@@ -6,13 +6,31 @@ Kanban List
 
 {% block content %}
 {% if kanbans %}
-    <ol>
-    {% for kanban in kanbans %}
-    <li>
-        <a href="{% url 'kanbanka:kanban_detail' kanban.id %}">{{ kanban.name }}</a> <a href="{% url 'kanbanka:kanban_delete' kanban.id %}">Удалить</a>
-    </li>
-    {% endfor %}
-    </ol>
+    {% if kanban_owner %}
+        <h3>Ваши канбаны</h3>
+        <ol>
+        {% for kanban in kanban_owner %}
+            <li>
+                <p>
+                    <a href="{% url 'kanbanka:kanban_detail' kanban.id %}">{{ kanban.name }}</a>
+                    <a href="{% url 'kanbanka:kanban_delete' kanban.id %}">Удалить</a>
+                </p>
+            </li>
+        {% endfor %}
+        </ol>
+    {% endif %}
+    {% if kanban_member %}
+        <h3>Вы состоите</h3>
+        <ol>
+            {% for kanban in kanban_member %}
+                <li>
+                    <p>
+                        <a href="{% url 'kanbanka:kanban_detail' kanban.id %}">{{ kanban.name }}</a>
+                    </p>
+                </li>
+            {% endfor %}
+        </ol>
+    {% endif %}
 {% else %}
 <p>Нет канбанов.</p>
 {% endif %}

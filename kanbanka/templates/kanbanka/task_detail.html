@@ -1,0 +1,28 @@
+{% extends 'kanbanka/base.html' %}
+
+{% block title %}
+Tasks Detail
+{% endblock %}
+
+{% block content %}
+    <h1>Задача "{{ task.name }}"</h1>
+    <h3>Канбан "{{ task.kanban.name }}", статус - {{ task.status }}</h3>
+    {% if task.status == "PLANNED" %}
+        <p>Автор - {{ task.owner }}</p>
+        <p>Создано {{ task.creation_date }} {{ task.creation_time }}</p>
+    {% endif %}
+    {% if task.status == "ACTIVE" %}
+        <p>Исполнитель - {{ task.executor }}; Автор - {{ task.owner }}</p>
+        <p>Выполнить до {{ task.deadline_date }} {{ task.deadline_time }}</p>
+    {% endif %}
+    {% if task.status == "COMPLETED" %}
+        <p>Исполнитель - {{ task.executor }}; Автор - {{ task.owner }}</p>
+        <p>Создано {{ task.creation_date }} {{ task.creation_time }}</p>
+        <p>Выполнено {{ task.completed_date }} {{ task.completed_time }}</p>
+    {% endif %}
+    {% if task.status == "OVERDUE" %}
+        <p>Исполнитель - {{ task.executor }}; Автор - {{ task.owner }}</p>
+        <p>Срок сдачи {{ task.deadline_date }} {{ task.deadline_time }}</p>
+    {% endif %}
+<!-- TODO встроенные ссылки на аккаунты -->
+{% endblock %}

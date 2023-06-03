@@ -1,6 +1,6 @@
 from .models import Kanban, Task
 from django.conf import settings
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 from django.views import generic as g  # встроенные views
 from django.contrib import messages
 from django.contrib.auth import views as authviews
@@ -20,6 +20,7 @@ from django.http import HttpResponseRedirect
 . Kanban Update
 . Kanban Delete
 . Task Create
+. Task Detail
 . Task Update
 . Task Delete
 . User Sign Up
@@ -27,7 +28,7 @@ from django.http import HttpResponseRedirect
 . User Logout
 """
 
-# TODO - Task Detail View
+# - Task Detail View
 # TODO - Kanban Update
 # TODO - профиль аккаунта
 # TODO - подтверждение аккаунта почтой
@@ -35,6 +36,7 @@ from django.http import HttpResponseRedirect
 # TODO - просрочка для Task
 # TODO - инвайт-система
 # TODO - css (относительно нормальный дизайн)
+# TODO - получать дату/время одной строкой(?), а потом уже разбивать на части
 
 
 class TimezoneMiddleware:
@@ -54,7 +56,7 @@ class KanbanCreateView(LoginRequiredMixin, g.CreateView):
     model = Kanban
     template_name = "kanbanka/kanban_create.html"
     fields = '__all__'
-    success_url = reverse_lazy("index")
+    success_url = reverse_lazy("kanbanka:index")
 
 
 class KanbanListView(g.ListView):
@@ -62,13 +64,20 @@ class KanbanListView(g.ListView):
     template_name = "kanbanka/index.html"
     context_object_name = "kanbans"  # default - object_list
 
-    def get_queryset(self):
-        user = self.request.user
-        if not user.is_authenticated:
-            return Kanban.objects.none()
+    # def get_queryset(self):
+    #     user = self.request.user
+    #     if not user.is_authenticated:
+    #         return Kanban.objects.none()
+    #
+    #     kanbans = Kanban.objects.filter(Q(owner=user) | Q(kanban_tasks__executor=user)).distinct()
+    #     return kanbans
 
-        kanbans = Kanban.objects.filter(Q(owner=user) | Q(kanban_tasks__executor=user)).distinct()
-        return kanbans
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        if self.request.user.is_authenticated:
+            context["kanban_owner"] = self.object_list.filter(Q(owner=self.request.user))
+            context["kanban_member"] = self.object_list.filter(Q(kanban_tasks__executor=self.request.user))
+        return context
 
 
 class KanbanDetailView(g.DetailView):
@@ -88,7 +97,7 @@ class KanbanDetailView(g.DetailView):
 
 class KanbanDeleteView(LoginRequiredMixin, UserPassesTestMixin, g.DeleteView):
     model = Kanban
-    success_url = reverse_lazy("index")
+    success_url = reverse_lazy("kanbanka:index")
     template_name = "kanbanka/kanban_delete.html"
 
     def test_func(self) -> bool | None:
@@ -124,7 +133,7 @@ def user_signup(request):
                 login(request, user)
             else:
                 messages.error(request, 'Invalid Log in.')
-                return reverse_lazy('index')
+                return reverse_lazy('kanbanka:index')
             return HttpResponseRedirect("/kanbanka/")
     else:
         form = UserCreationForm()
@@ -218,3 +227,25 @@ class TaskCompleteView(g.UpdateView, LoginRequiredMixin, UserPassesTestMixin):
             self.object.completed_time = timezone.now().time()
 
         return super().form_valid(form)
+
+
+# Задача, страница "подробнее"
+class TaskDetailView(g.DetailView):
+    model = Task
+    template_name = "kanbanka/task_detail.html"
+    context_object_name = "task"
+
+
+# ЗАДАЧИ ЮЗЕРА
+class TaskUserListView(g.ListView):
+    model = Task
+    template_name = "kanbanka/user_tasks.html"
+    context_object_name = "tasks"  # default - object_list
+
+    def get_queryset(self):
+        user = self.request.user
+        if not user.is_authenticated:
+            return Task.objects.none()
+
+        tasks = Task.objects.filter(Q(executor=user))
+        return tasks

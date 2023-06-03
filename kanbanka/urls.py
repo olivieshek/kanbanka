@@ -11,6 +11,8 @@ from .views import (
     TaskActivateView,
     TaskCompleteView,
     user_signup,
+    TaskUserListView,
+    TaskDetailView,
 )
 
 app_name = "kanbanka"
@@ -28,6 +30,7 @@ urlpatterns = [
     path("kanban/task_delete/<int:pk>", TaskDeleteView.as_view(), name="task_delete"),
     path("kanban/task_activate/<int:pk>", TaskActivateView.as_view(), name="task_activate"),
     path("kanban/task_complete/<int:pk>", TaskCompleteView.as_view(), name="task_complete"),
-    # path("accounts/signup/", UserSignup, name="signup"),
+    path("kanban/task_detail/<int:pk>", TaskDetailView.as_view(), name="task_detail"),  # задача - "подробнее..."
+    path("user_tasks/", TaskUserListView.as_view(), name="user_tasks"),  # ЗАДАЧИ ЮЗЕРА
 ]
 
