@@ -1,0 +1,13 @@
+{% extends 'kanbanka/base.html' %}
+
+{% block title %}
+Sign Up Form
+{% endblock %}
+
+{% block content %}
+<form action="" method="POST">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Создать</button>
+</form>
+{% endblock %}

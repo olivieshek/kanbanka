@@ -1,0 +1,14 @@
+{% extends 'kanbanka/base.html' %}
+
+{% block title %}
+Task Creation Form
+{% endblock %}
+
+{% block content %}
+<p>Создание задачи</p>
+<form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <input type="submit" value="Сохранить">
+</form>
+{% endblock %}
