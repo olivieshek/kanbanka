@@ -90,7 +90,7 @@ class KanbanDetailView(g.DetailView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         object = context['object']
-        context["tasks"] = self.object.kanban_tasks.filter(kanban=object.id)
+        context["tasks"] = self.object.kanban_tasks.filter(kanban=object)
         context["tasks_planned"] = Task.objects.filter(status='PLANNED', kanban=object)
         context["tasks_active"] = Task.objects.filter(status='ACTIVE', kanban=object)
         context["tasks_completed"] = Task.objects.filter(status='COMPLETED', kanban=object)
