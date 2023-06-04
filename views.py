@@ -76,7 +76,9 @@ class KanbanListView(g.ListView):
         context = super().get_context_data(**kwargs)
         if self.request.user.is_authenticated:
             context["kanban_owner"] = self.object_list.filter(Q(owner=self.request.user)).distinct()
-            context["kanban_member"] = self.object_list.filter(Q(kanban_tasks__executor=self.request.user)).distinct()
+            context["kanban_member"] = self.object_list.filter(Q(kanban_tasks__executor=self.request.user)).exclude(
+                Q(owner=self.request.user)
+            )
         return context
 
 
@@ -87,11 +89,12 @@ class KanbanDetailView(g.DetailView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["tasks"] = self.object.kanban_tasks
-        context["tasks_planned"] = Task.objects.filter(status='PLANNED')
-        context["tasks_active"] = Task.objects.filter(status='ACTIVE')
-        context["tasks_completed"] = Task.objects.filter(status='COMPLETED')
-        context["tasks_overdue"] = Task.objects.filter(status='OVERDUE')
+        object = context['object']
+        context["tasks"] = self.object.kanban_tasks.filter(kanban=object.id)
+        context["tasks_planned"] = Task.objects.filter(status='PLANNED', kanban=object)
+        context["tasks_active"] = Task.objects.filter(status='ACTIVE', kanban=object)
+        context["tasks_completed"] = Task.objects.filter(status='COMPLETED', kanban=object)
+        context["tasks_overdue"] = Task.objects.filter(status='OVERDUE', kanban=object)
         return context
 
 
